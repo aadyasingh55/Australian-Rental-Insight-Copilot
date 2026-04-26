@@ -1,0 +1,13 @@
+suburb,state,weekly_rent,bedrooms,bathrooms,property_type,postcode,distance_to_cbd_km,listing_days
+Parramatta,NSW,690,2,2,Unit,2150,24,11
+Newtown,NSW,820,2,1,Unit,2042,5,6
+Footscray,VIC,610,2,1,Apartment,3011,6,14
+Southbank,VIC,760,1,1,Apartment,3006,2,9
+Fortitude Valley,QLD,640,1,1,Apartment,4006,2,18
+Clayton,VIC,580,2,1,Unit,3168,19,21
+St Lucia,QLD,720,2,2,Unit,4067,6,10
+Carlton,VIC,840,2,2,Apartment,3053,2,8
+Chatswood,NSW,930,2,2,Apartment,2067,10,7
+Wollongong,NSW,560,2,1,Unit,2500,68,25
+Geelong,VIC,520,2,1,House,3220,74,27
+Canberra,ACT,780,2,2,Townhouse,2601,4,13
