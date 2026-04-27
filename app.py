@@ -28,6 +28,7 @@ EXTERNAL_DATA_PATH = PROJECT_ROOT / "data" / "external"
 PRIMARY_DATASET_PATHS = [
     EXTERNAL_DATA_PATH / "australian_rental_market_data_2026.csv",
     EXTERNAL_DATA_PATH / "australian_rental_market_data.csv",
+    EXTERNAL_DATA_PATH / "australian_rental_market_2026.csv",
 ]
 SECONDARY_DATASET_PATHS = [
     EXTERNAL_DATA_PATH / "nsw_rental_bond_lodgement.csv",

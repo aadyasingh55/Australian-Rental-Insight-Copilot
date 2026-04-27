@@ -16,12 +16,16 @@ def load_australian_rental_market_data(path: str | Path) -> pd.DataFrame:
     frame = load_csv(path)
     rename_map = {
         "price": "weekly_rent",
+        "price_display": "weekly_rent",
         "weekly_rent_aud": "weekly_rent",
+        "propertytype": "property_type",
         "property_sub_type": "property_type",
     }
     existing = {key: value for key, value in rename_map.items() if key in frame.columns}
     if existing:
         frame = frame.rename(columns=existing)
+    if "suburb" not in frame.columns and "locality" in frame.columns:
+        frame = frame.rename(columns={"locality": "suburb"})
     return frame
 
 
