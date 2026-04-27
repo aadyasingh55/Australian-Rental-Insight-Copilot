@@ -15,21 +15,45 @@ from src.analysis import (
     generate_insight_lines,
     suburb_summary,
 )
+from src.dataset_adapters import (
+    load_australian_rental_market_data,
+    load_nsw_bond_lodgement_data,
+)
 from src.schema import RentalSchema, infer_schema, normalize_columns
 
 
 PROJECT_ROOT = Path(__file__).parent
 SAMPLE_DATA_PATH = PROJECT_ROOT / "data" / "sample_rental_listings.csv"
+EXTERNAL_DATA_PATH = PROJECT_ROOT / "data" / "external"
+PRIMARY_DATASET_PATHS = [
+    EXTERNAL_DATA_PATH / "australian_rental_market_data_2026.csv",
+    EXTERNAL_DATA_PATH / "australian_rental_market_data.csv",
+]
+SECONDARY_DATASET_PATHS = [
+    EXTERNAL_DATA_PATH / "nsw_rental_bond_lodgement.csv",
+]
 
 
 @st.cache_data
-def load_frame(uploaded_file) -> pd.DataFrame:
+def load_frame(uploaded_file) -> tuple[pd.DataFrame, str]:
     if uploaded_file is None:
+        for path in PRIMARY_DATASET_PATHS:
+            if path.exists():
+                frame = load_australian_rental_market_data(path)
+                return coerce_numeric_columns(frame), f"Australian Rental Market Data ({path.name})"
+
+        for path in SECONDARY_DATASET_PATHS:
+            if path.exists():
+                frame = load_nsw_bond_lodgement_data(path)
+                return coerce_numeric_columns(frame), f"NSW Rental Bond Lodgement ({path.name})"
+
         frame = pd.read_csv(SAMPLE_DATA_PATH)
+        source_label = f"Bundled sample dataset ({SAMPLE_DATA_PATH.name})"
     else:
         frame = pd.read_csv(uploaded_file)
+        source_label = f"Uploaded dataset ({uploaded_file.name})"
     frame = normalize_columns(frame)
-    return coerce_numeric_columns(frame)
+    return coerce_numeric_columns(frame), source_label
 
 
 def apply_filters(frame: pd.DataFrame, schema: RentalSchema) -> pd.DataFrame:
@@ -195,13 +219,15 @@ def main() -> None:
     )
 
     uploaded_file = st.file_uploader("Upload rental CSV", type=["csv"])
-    frame = load_frame(uploaded_file)
+    frame, source_label = load_frame(uploaded_file)
     schema = infer_schema(frame)
     filtered = apply_filters(frame, schema)
 
-    st.caption(
-        "Sample dataset is loaded by default. Upload your own CSV to replace it."
-    )
+    st.caption(source_label)
+    if uploaded_file is None and "Bundled sample dataset" in source_label:
+        st.caption(
+            "No external dataset was found in `data/external/`, so the bundled sample dataset is loaded as a fallback."
+        )
     if not schema.rent or not schema.suburb:
         st.warning(
             "This app works best with rental-style CSVs that include suburb/location and weekly rent columns. "
