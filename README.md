@@ -107,6 +107,3 @@ This repository is an MVP analytics tool rather than a full production rental in
 - Schema inference is heuristic, so some real-world exports may need minor cleanup
 - The anomaly detection and insight summaries are exploratory signals, not final market judgments
 
-## Resume-ready description
-
-Built an Australian rental market insight copilot that performs automated EDA, multivariable visualisation, anomaly detection, and rental pricing analysis using a national rental listing dataset and official NSW bond lodgement data in a Streamlit interface.
